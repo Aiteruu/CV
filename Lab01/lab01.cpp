@@ -147,6 +147,6 @@ int main(int argc, char** argv){
     draw();
     auto stop = high_resolution_clock::now(); 
     auto duration = duration_cast<microseconds>(stop - start);
-    printf("finished in", duration.count() / 1000.0, "ms");
+    cout << "finished in " << duration.count() / 1000.0 << "ms" << endl;
     return 0; 
 }
