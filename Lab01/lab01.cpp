@@ -4,9 +4,11 @@
 #include <vector>
 #include <cstdio>
 #include <time.h>
+#include <chrono>
 #define SIZE 800
-#define RGB false
+
 using namespace std;
+using namespace std::chrono; 
 
 vector<vector<vector<int>>> pix(SIZE, vector<vector<int>> (SIZE, vector<int> (3, 255)));
 
@@ -34,6 +36,7 @@ void drawLine(int x1, int y1, int x2, int y2, vector<int> &color){
     }
         
 }
+
 void placePoint(int x, int y, int dx, int dy, vector<int> color){
     for(int i = 0; i < 8; i++){
         int dx_n = (i < 4 ? dx : dy) * (i % 4 < 2 ? 1 : -1);
@@ -42,6 +45,7 @@ void placePoint(int x, int y, int dx, int dy, vector<int> color){
             pix[x + dx_n][y + dy_n] = color;
     }
 }
+
 void drawCircle(int x, int y, int r, vector<int> color){
     int dx = 0, dy = r;
     int p = 3 - 2 * r;
@@ -109,6 +113,7 @@ vector<double> circumcircle(vector<double> p, vector<double> lengths, double r){
 }
 
 int main(int argc, char** argv){
+    auto start = high_resolution_clock::now(); 
     srand (time(NULL));
     vector<int> color {rand()%255, rand()%255, rand()%255};
     vector<double> p(6);
@@ -139,8 +144,9 @@ int main(int argc, char** argv){
     double y_int = ninepoint[1] - slope * ninepoint[0];
     vector<int> color2 {rand() % 255, rand() % 255, rand() % 255};
     drawLine(0, round(y_int), SIZE, round(slope * SIZE + y_int), color2);
-    
     draw();
-    cout << "done" << endl;
+    auto stop = high_resolution_clock::now(); 
+    auto duration = duration_cast<microseconds>(stop - start);
+    printf("finished in", duration.count() / 1000.0, "ms");
     return 0; 
 }
