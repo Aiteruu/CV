@@ -143,11 +143,6 @@ int main(int argc, char** argv){
     //euler line
     double slope = (ninepoint[1] - circum[1]) / (ninepoint[0] - circum[0]);
     double y_int = ninepoint[1] - slope * ninepoint[0];
-    /* working code
-    vector<int> color2 {rand() % 255, rand() % 255, rand() % 255};
-    drawLine(0, round(y_int), SIZE, round(slope * SIZE + y_int), color2);
-    */
-    //non working code
     drawLine(0, round(y_int), SIZE, round(slope * SIZE + y_int), vector<int> {rand() % 255, rand() % 255, rand() % 255});
     draw();
     auto stop = high_resolution_clock::now(); 
