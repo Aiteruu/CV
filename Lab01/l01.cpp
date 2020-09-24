@@ -28,7 +28,7 @@ void drawLine(int x1, int y1, int x2, int y2, vector<int> color){
     int p = 2 * dy - dx;
     for(int x = x1, y = y1; x < x2; x++){
         if (x >= 0 && x < SIZE && y >=0 && y < SIZE)
-            drivingAxis ? pix[x][y] = color : pix[y][x] = c;
+            drivingAxis ? pix[x][y] = c : pix[y][x] = c;
         p += dir * 2 * dy;
         if(p > 0){
             y += dir;
@@ -38,7 +38,7 @@ void drawLine(int x1, int y1, int x2, int y2, vector<int> color){
         
 }
 
-void placePoint(int x, int y, int dx, int dy, vector<int> color){
+void placePoint(int x, int y, int dx, int dy, vector<int> &color){
     for(int i = 0; i < 8; i++){
         int dx_n = (i < 4 ? dx : dy) * (i % 4 < 2 ? 1 : -1);
         int dy_n = (i < 4 ? dy : dx) * (i % 2 == 0 ? 1 : -1);
