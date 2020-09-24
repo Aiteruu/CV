@@ -12,7 +12,8 @@ using namespace std::chrono;
 
 vector<vector<vector<int>>> pix(SIZE, vector<vector<int>> (SIZE, vector<int> (3, 255)));
 
-void drawLine(int x1, int y1, int x2, int y2, vector<int> &color){
+void drawLine(int x1, int y1, int x2, int y2, vector<int> color){
+    auto &c = color;
     bool drivingAxis = abs(x1 - x2) >= abs(y2 - y1); //True if x is the driving axis, False if y is the driving axis
     if(!drivingAxis){
         swap(x1, y1);
@@ -27,7 +28,7 @@ void drawLine(int x1, int y1, int x2, int y2, vector<int> &color){
     int p = 2 * dy - dx;
     for(int x = x1, y = y1; x < x2; x++){
         if (x >= 0 && x < SIZE && y >=0 && y < SIZE)
-            drivingAxis ? pix[x][y] = color : pix[y][x] = color;
+            drivingAxis ? pix[x][y] = color : pix[y][x] = c;
         p += dir * 2 * dy;
         if(p > 0){
             y += dir;
@@ -146,7 +147,7 @@ int main(int argc, char** argv){
     vector<int> color2 {rand() % 255, rand() % 255, rand() % 255};
     drawLine(0, round(y_int), SIZE, round(slope * SIZE + y_int), color2);
     */
-    //non-working code
+    //non working code
     drawLine(0, round(y_int), SIZE, round(slope * SIZE + y_int), vector<int> {rand() % 255, rand() % 255, rand() % 255});
     draw();
     auto stop = high_resolution_clock::now(); 
