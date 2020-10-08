@@ -10,14 +10,14 @@ using namespace std;
 struct Point{
     double x, y;
     friend ostream & operator << (ostream &out, const Point& c) {
-        out << setprecision(17) << c.x << ", " << c.y << endl;
+        out << "(" << setprecision(17) << c.x << ", " << c.y << ")";
         return out;
     }
 };
 
 double my_random(){
     return (double)rand()/(double)RAND_MAX;
-}
+}   
 double distance(double x1, double y1, double x2, double y2){
     return pow(x1 - x2, 2) + pow(y1 - y2, 2);
 }
@@ -42,7 +42,7 @@ int main(){
     auto x = my_random() * abs(upper_bound - lower_bound) + lower_bound;
     Point p4 {x, m * (x - p3.x) + p3.y};
     ofstream ofs("points.txt");
-    ofs << p1 << p2 << p3 << p4;
+    ofs << p1 << " , " << p2 << " , " << p3 << " , " << p4;
     ofs.close();
     return 0;
 }
