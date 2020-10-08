@@ -15,7 +15,7 @@ struct Point{
     }
 };
 
-double random(){
+double my_random(){
     return (double)rand()/(double)RAND_MAX;
 }
 double distance(double x1, double y1, double x2, double y2){
@@ -29,7 +29,7 @@ double min_distance(struct Point p1){
 }
 int main(){
     srand (time(NULL));
-    vector<struct Point> pts {Point{random(), random()}, Point{random(), random()}, Point{random(), random()}};
+    vector<struct Point> pts {Point{my_random(), my_random()}, Point{my_random(), my_random()}, Point{my_random(), my_random()}};
     auto max_dist = 0;
     for(int i = 0; i < pts.size(); i++) max_dist = min_distance(pts[i]) > min_distance(pts[max_dist]) ? i : max_dist;
     auto p3 = pts[max_dist];
@@ -39,7 +39,7 @@ int main(){
     auto lower_bound = max((-1 * p3.y + m * p3.x) / m, 0.0);
     auto upper_bound = min((1 - p3.y + m * p3.x) / m, 1.0);
 
-    auto x = random() * abs(upper_bound - lower_bound) + lower_bound;
+    auto x = my_random() * abs(upper_bound - lower_bound) + lower_bound;
     Point p4 {x, m * (x - p3.x) + p3.y};
     ofstream ofs("points.txt");
     ofs << p1 << p2 << p3 << p4;
