@@ -36,11 +36,23 @@ int main(){
     auto p1 = pts[(max_dist + 1) % 3];
     auto p2 = pts[(max_dist + 2) % 3];
     auto m = (p1.y - p2.y) / (p1.x - p2.x);
-    auto lower_bound = max((-1 * p3.y + m * p3.x) / m, 0.0);
-    auto upper_bound = min((1 - p3.y + m * p3.x) / m, 1.0);
-
+    auto lower_bound = (-1 * p3.y + m * p3.x) / m;
+    auto upper_bound = (1 - p3.y + m * p3.x) / m;
+    if(lower_bound > upper_bound) swap(lower_bound, upper_bound);
+    lower_bound = max(lower_bound, 0.0);
+    upper_bound = min(upper_bound, 1.0);
+    auto y_in_bounds = false;
     auto x = my_random() * abs(upper_bound - lower_bound) + lower_bound;
     Point p4 {x, m * (x - p3.x) + p3.y};
+    while(!y_in_bounds){
+        if(p4.y > 0 && p4.y < 1 && p4.x != p3.x)
+            y_in_bounds = true;
+        else{
+            x = my_random() * abs(upper_bound - lower_bound) + lower_bound;
+            p4 = {x, m * (x - p3.x) + p3.y};
+        }
+    }
+    
     ofstream ofs("points.txt");
     ofs << p1 << " , " << p2 << " , " << p3 << " , " << p4;
     ofs.close();
