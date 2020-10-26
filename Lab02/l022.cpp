@@ -43,13 +43,13 @@ double distance(double x1, double y1, double x2, double y2){
     return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
 }
 
-double min_distance(struct Point p1){
+double min_distance( Point p1){
     vector<double> dist {distance(p1.x, p1.y, 0, 0), distance(p1.x, p1.y, 0, 1), distance(p1.x, p1.y, 1, 1), distance(p1.x, p1.y, 1, 0)};
     auto min_dist = dist[0];
     for (auto& c : dist) min_dist = min(c, min_dist);
     return min_dist;
 }
-double slope(struct Point p1, struct Point p2){
+double slope( Point p1,  Point p2){
     return (p2.y - p1.y) / (p2.x - p1.x);
 }
 
@@ -63,7 +63,7 @@ Point intersect(Line l1, Line l2){
     auto x = (l2.b - l1.b) / (l1.m - l2.m);
     return Point{x, l1.m * x + l1.b};
 }
-void part1(vector<struct Point> pts){
+void part1(vector< Point> pts){
     auto max_dist = 0;
     for(int i = 0; i < pts.size(); i++) max_dist = min_distance(pts[i]) > min_distance(pts[max_dist]) ? i : max_dist;
     auto p3 = pts[max_dist];
@@ -162,7 +162,7 @@ void draw_part2(vector<Line> lines, vector<Point> points){
     draw(pix);
 }
 
-vector<struct Line> part2_helper(Point p1, Point p2, Point p3, Point p4, int sign){
+vector< Line> part2_helper(Point p1, Point p2, Point p3, Point p4, int sign){
     auto m = slope(p1, p2);
     auto perp_m = -1 / m;
     auto perp_b = intercept(p3.x, p3.y, perp_m);
@@ -192,11 +192,11 @@ vector<struct Line> part2_helper(Point p1, Point p2, Point p3, Point p4, int sig
     auto x_i2 = x_intersect(edge_0_m, edge_0_b, edge_2_m, edge_2_b);
     auto area = pow(distance(x_i1, edge_0_m * x_i1 + edge_0_b, x_i2, edge_0_m * x_i2 + edge_0_b), 2); 
 
-    return vector<struct Line> { Line{edge_0_m, edge_0_b}, Line{edge_1_m, edge_1_b}, Line{edge_3_m, edge_3_b}, Line{edge_2_m, edge_2_b}, Line{area, 0.0}};
+    return vector< Line> { Line{edge_0_m, edge_0_b}, Line{edge_1_m, edge_1_b}, Line{edge_3_m, edge_3_b}, Line{edge_2_m, edge_2_b}, Line{area, 0.0}};
 }
-void part2(vector<struct Point> pts){
+void part2(vector< Point> pts){
     auto p = pts[0];
-    vector<vector<struct Line>> sq {};
+    vector<vector< Line>> sq {};
     for(int i = 1; i < pts.size(); i++){
         for(int i2 = 0; i2 < 2; i2++){
             list<int> index {1,2,3};
@@ -204,7 +204,7 @@ void part2(vector<struct Point> pts){
             sq.push_back(part2_helper(pts[0], pts[i], pts[index.back()], pts[index.front()], i2));
         }
     }
-    sort(sq.begin(), sq.end(), [](vector<struct Line> &a, vector<struct Line> const &b) {
+    sort(sq.begin(), sq.end(), [](vector< Line> &a, vector< Line> const &b) {
     return a[4].m < b[4].m; 
     });
 
@@ -228,7 +228,7 @@ bool isParen(char ch){
 }
 int main(){
     srand (time(NULL));
-    vector<struct Point> pts {Point{my_random(), my_random()}, Point{my_random(), my_random()}, Point{my_random(), my_random()}};
+    vector< Point> pts {Point{my_random(), my_random()}, Point{my_random(), my_random()}, Point{my_random(), my_random()}};
     //part1(pts);
 
     ifstream infile;
@@ -239,7 +239,7 @@ int main(){
     points_str.erase(remove_if(points_str.begin(), points_str.end(), isParen), points_str.end());
     istringstream f(points_str);
     string line, next;    
-    vector<struct Point> pts2 {};
+    vector< Point> pts2 {};
     while (getline(f, line)) {
         getline(f, next);
         pts2.push_back(Point{stod(line), stod(next)});
