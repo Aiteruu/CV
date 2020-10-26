@@ -11,15 +11,25 @@
 #define SIZE 800
 using namespace std;
 
-struct Point{
-    double x, y;
+class Point{
+    public:
+        double x, y;
+    Point(double x1, double y1){
+        x = x1;
+        y = y1;
+    }
     friend ostream & operator << (ostream &out, const Point& c) {
         out << "(" << setprecision(17) << c.x << ", " << c.y << ")";
         return out;
     }
 };
-struct Line{
-    double m, b;
+class Line{
+    public:
+        double m, b;
+    Line(double m1, double b1){
+        m = m1;
+        b = b1;
+    }
     friend ostream & operator << (ostream &out, const Line& c) {
         out << "(" << setprecision(17) << c.m << ", " << c.b << ")";
         return out;
