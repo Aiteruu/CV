@@ -49,6 +49,10 @@ double intercept(double x, double y, double m){
 double x_intersect(double m1, double b1, double m2, double b2){
     return (b2 - b1) / (m1 - m2);
 }
+Point intersect(Line l1, Line l2){
+    auto x = (l2.b - l1.b) / (l1.m - l2.m);
+    return Point{x, l1.m * x + l1.b};
+}
 void part1(vector<struct Point> pts){
     auto max_dist = 0;
     for(int i = 0; i < pts.size(); i++) max_dist = min_distance(pts[i]) > min_distance(pts[max_dist]) ? i : max_dist;
@@ -148,17 +152,17 @@ void draw_part2(vector<Line> lines, vector<Point> points){
     draw(pix);
 }
 
-vector<struct Line> part2_helper(Point p1, Point p2, Point p3, Point p4){
+vector<struct Line> part2_helper(Point p1, Point p2, Point p3, Point p4, int sign){
     auto m = slope(p1, p2);
     auto perp_m = -1 / m;
     auto perp_b = intercept(p3.x, p3.y, perp_m);
- 
+    sign = sign == 0 ? -1 : 1;
     auto x_i = x_intersect(m, intercept(p1.x, p1.y, m), perp_m, perp_b);
 
     auto l = distance(p3.x, p3.y, x_i, perp_m * x_i + perp_b);
     auto d = distance(p1.x, p1.y, p2.x, p2.y);
 
-    auto del_x = abs(d / l) * abs(x_i - p3.x);
+    auto del_x = sign * abs(d / l) * abs(x_i - p3.x);
     auto new_x = p3.x + ((x_i - p3.x > 0) ? 1 : -1) * del_x;
 
     Point E = {new_x, new_x * perp_m + perp_b};
@@ -184,14 +188,10 @@ void part2(vector<struct Point> pts){
     auto p = pts[0];
     vector<vector<struct Line>> sq {};
     for(int i = 1; i < pts.size(); i++){
-        auto m = slope(p, pts[i]);
-        for(int i2 = 1; i2 < pts.size(); i2++){
-            if(i2 != i){
-                list<int> index {1,2,3};
-                index.remove(i);
-                index.remove(i2);
-                sq.push_back(part2_helper(pts[0], pts[i], pts[i2], pts[index.front()]));
-            }
+        for(int i2 = 0; i2 < 2; i2++){
+            list<int> index {1,2,3};
+            index.remove(i);
+            sq.push_back(part2_helper(pts[0], pts[i], pts[index.back()], pts[index.front()], i2));
         }
     }
     sort(sq.begin(), sq.end(), [](vector<struct Line> &a, vector<struct Line> const &b) {
@@ -205,9 +205,9 @@ void part2(vector<struct Point> pts){
     ofs << pts[3] << endl;
     for(auto lines : sq){
         for(auto i = 0; i < 3; i++){
-            ofs << lines[i] << " , "; 
+            ofs << intersect(lines[i], lines[i+1]) << " , "; 
         }
-        ofs << lines[3] << " Area = " << lines[4].m << endl;
+        ofs << intersect(lines[3], lines[0]) << " Area = " << lines[4].m << endl;
     }
     ofs.close();
 
