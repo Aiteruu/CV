@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <chrono>
 #define SIZE 800
-
+#define NPOINTS 1000
 using namespace std;
 using namespace std::chrono;
 
@@ -26,7 +26,7 @@ class Point{
         y = y1;
     }
     friend ostream & operator << (ostream &out, const Point& c) {
-        out << fixed << setprecision(17) << c.x << "  " << c.y << endl;
+        out << "(" << fixed << setprecision(17) << c.x << ", " << c.y << ")" << endl;
         return out;
     }
     static double random_point(){
@@ -61,9 +61,9 @@ vector<Point> get_vector(int n){
         ofs << pt;
     ofs.close();
     return pts;
-}
+} auto points = get_vector(NPOINTS);
 
-vector<int> part1(vector<Point> &pts){
+vector<int> p1(vector<Point> &pts){
     int pt1, pt2;
     double min_distance = 2;
     
@@ -122,7 +122,7 @@ vector<int> recur(vector<Point> &pts, int lower_bound, int upper_bound){
     auto s = min_split;
     auto dist_s = d;
     if(slice.size() > 1){
-        s = part1(slice);
+        s = p1(slice);
         s[0] += offset;
         s[1] += offset;
         dist_s = distance(pts[s[0]], pts[s[1]]);
@@ -133,39 +133,50 @@ vector<int> recur(vector<Point> &pts, int lower_bound, int upper_bound){
     return min_split;
 }
 
-vector<int> part2(vector<Point> &pts){
+vector<int> p2(vector<Point> &pts){
     sort(pts.begin(), pts.end(), 
         [](Point &a, Point &b) -> bool
     { 
         return a.get_x() < b.get_x(); 
     });
     return recur(pts, 0, pts.size());
-}   
-int main(int argc, char** argv){
-    int npoints;
-    if(argc == 1) npoints = 2000;
-    else npoints = int(argv[1]);
-    auto points = get_vector(npoints);
-    cout << "testing with " << npoints << " points" << endl;
-
+}
+void part1(vector<Point> &points){
+    ofstream ofs("results.txt");
     auto start = high_resolution_clock::now(); 
-    auto closest_part1 = part1(points);
+    auto closest_part1 = p1(points);
     cout << "Part 1" << endl;
     cout << points[closest_part1[0]] << points[closest_part1[1]];
+    ofs << "Part 1" << endl;
+    ofs << points[closest_part1[0]] << points[closest_part1[1]];
     auto stop = high_resolution_clock::now(); 
     auto duration = duration_cast<microseconds>(stop - start);
     cout << "distance: " << distance(points[closest_part1[0]], points[closest_part1[1]]) << endl;
     cout << duration.count() << " milliseconds" << endl << endl;
-
-
-    start = high_resolution_clock::now(); 
-    auto closest_part2 = part2(points);
-    stop = high_resolution_clock::now();
-    duration = duration_cast<microseconds>(stop - start);
+    ofs << "distance: " << distance(points[closest_part1[0]], points[closest_part1[1]]) << endl;
+    ofs << duration.count() << " milliseconds" << endl << endl;
+    ofs.close();
+}
+void part2(vector<Point> &points){
+    ofstream ofs;
+    ofs.open("results.txt", ios_base::app);
+    auto start = high_resolution_clock::now(); 
+    auto closest_part2 = p2(points);
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
     cout << "Part 2" << endl;
     cout << points[closest_part2[0]] << points[closest_part2[1]];
     cout << "distance: " << distance(points[closest_part2[0]], points[closest_part2[1]]) << endl;
-
     cout << duration.count() << " microseconds" << endl;
+
+    ofs << "Part 2" << endl;
+    ofs << points[closest_part2[0]] << points[closest_part2[1]];
+    ofs << "distance: " << distance(points[closest_part2[0]], points[closest_part2[1]]) << endl;
+    ofs << duration.count() << " microseconds";
+    ofs.close();
+}
+int main(int argc, char** argv){
+    part1(points);
+    part2(points);
     return 0;
 }
