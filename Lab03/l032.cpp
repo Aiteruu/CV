@@ -7,6 +7,8 @@
 #include <fstream>
 #include <algorithm>
 #include <chrono>
+#include <sstream>
+#include <string>
 #define SIZE 800
 #define NPOINTS 1000
 using namespace std;
@@ -26,7 +28,7 @@ class Point{
         y = y1;
     }
     friend ostream & operator << (ostream &out, const Point& c) {
-        out << "(" << fixed << setprecision(17) << c.x << ", " << c.y << ")" << endl;
+        out << fixed << setprecision(17) << c.x << "   " << c.y << endl;
         return out;
     }
     static double random_point(){
@@ -57,11 +59,11 @@ vector<Point> get_vector(int n){
         pts.push_back(Point());
     }
     ofstream ofs("points.txt");
-    for(auto pt :pts)
-        ofs << pt;
+    for(auto it = pts.begin(); it != pts.end(); it++) 
+        ofs << *it;
     ofs.close();
     return pts;
-} auto points = get_vector(NPOINTS);
+} 
 
 vector<int> p1(vector<Point> &pts){
     int pt1, pt2;
@@ -175,6 +177,28 @@ void part2(vector<Point> &points){
     ofs << duration.count() << " microseconds";
     ofs.close();
 }
+vector<Point> read_file(string path){
+    ifstream infile;
+    string points_str;
+    vector< Point> pts2 {};
+    infile.open("points.txt");
+    while(getline(infile, points_str)){
+        replace(points_str.begin(), points_str.end(), ' ', '\n');
+        istringstream f(points_str);
+        string line, next;    
+
+        while (getline(f, line)) {
+            getline(f, next);
+            getline(f, next);
+            getline(f, next);
+            getline(f, next);
+            pts2.push_back(Point{stod(line), stod(next)});
+        }
+    }
+    return pts2;
+}
+auto points = get_vector(NPOINTS);
+//auto points = read_file("points.txt"); 
 int main(int argc, char** argv){
     part1(points);
     part2(points);
