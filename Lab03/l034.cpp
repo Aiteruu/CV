@@ -282,6 +282,7 @@ vector<Point> p4(vector<Point> &pts){
         // cout << i << endl;
         // i++;
         if(delta == 0) break;
+        visited.push_back(pt);
         auto subsquare = Point{floor(pt.get_x() * 2 / delta), floor(pt.get_y() * 2 / delta)};
         double delta_prime = delta;
         for(int x = subsquare.get_x() - 2; x <= subsquare.get_x() + 2; x++){
