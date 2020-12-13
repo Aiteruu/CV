@@ -59,9 +59,39 @@ class Point{
     }
 };
 
+class Pair{
+    private:
+        double x, y;
+    public:
+    Pair(unsigned long long x1, unsigned long long y1){
+        x = x1;
+        y = y1;
+    }
+    bool operator==(const Pair &other) const
+    { 
+        return (x == other.x && y == other.y);
+    }
+    friend ostream & operator << (ostream &out, const Pair& c) {
+        out << fixed << setprecision(17) << scientific << c.x << "   " << c.y << endl;
+        return out;
+    }
+    unsigned long long get_x(){
+        return x;
+    }
+    unsigned long long get_y(){
+        return y;
+    }
+    unsigned long long const_x() const{
+        return x;
+    }
+    unsigned long long const_y() const{
+        return y;
+    }
+};
+
 class hash_function { 
 public: 
-    size_t operator()(const Point& p) const
+    size_t operator()(const Pair& p) const
     { 
         return p.const_x() + p.const_y(); 
     } 
@@ -262,10 +292,10 @@ vector<int> p3(vector<Point> &pts){
     return recur_pt3(pts, 0, pts.size());
 }
 
-void maintain_subsquares(unordered_map<Point, Point, hash_function> &um, double delta, vector<Point> &pts){
+void maintain_subsquares(unordered_map<Pair, Point, hash_function> &um, double delta, vector<Point> &pts){
     um.clear();
     for(auto &pt : pts)
-        um[Point{floor(pt.get_x() * 2 / delta), floor(pt.get_y() * 2 / delta)}] = pt;
+        um[Pair{(unsigned long long)floor(pt.get_x() * 2 / delta), (unsigned long long)floor(pt.get_y() * 2 / delta)}] = pt;
 }
 
 vector<Point> p4(vector<Point> &pts){
@@ -274,7 +304,7 @@ vector<Point> p4(vector<Point> &pts){
         swap(pts[i], pts[rand() % (pts.size() - i) + i]);
     auto delta = distance(pts[0], pts[1]);
     vector<Point> visited {pts[0], pts[1]};
-    unordered_map<Point, Point,  hash_function> *subsquares = new unordered_map<Point, Point,  hash_function>;
+    unordered_map<Pair, Point,  hash_function> *subsquares = new unordered_map<Pair, Point,  hash_function>;
     maintain_subsquares(*subsquares, delta, visited);
     int i = 0;
     for(auto &pt : vector<Point>(pts.begin() + 2, pts.end())){
@@ -283,13 +313,12 @@ vector<Point> p4(vector<Point> &pts){
         // i++;
         if(delta == 0) break;
         visited.push_back(pt);
-        auto subsquare = Point{floor(pt.get_x() * 2 / delta), floor(pt.get_y() * 2 / delta)};
+        auto subsquare = Pair{(unsigned long long)floor(pt.get_x() * 2 / delta), (unsigned long long)floor(pt.get_y() * 2 / delta)};
         double delta_prime = delta;
-        for(int x = subsquare.get_x() - 2; x <= subsquare.get_x() + 2; x++){
-            for(int y = subsquare.get_y() - 2; y <= subsquare.get_y() + 2; y++){
-                auto sq = Point{double(x), double(y)};
+        for(unsigned long long x = max((unsigned long long) 0, subsquare.get_x() - 2); x <= subsquare.get_x() + 2; x++){
+            for(unsigned long long y = max((unsigned long long) 0, subsquare.get_y() - 2); y <= subsquare.get_y() + 2; y++){
+                auto sq = Pair{x, y};
                 if(subsquares->find(sq) != subsquares->end()){
-                    
                     auto pt2 = (*subsquares)[sq];
                     auto dist = distance(pt, pt2);
                     if(dist < delta_prime){
@@ -310,7 +339,7 @@ vector<Point> p4(vector<Point> &pts){
     }
     return min_dist;
 }
-void part1(vector<Point> &points){
+void part1(vector<Point> points){
     ofstream ofs("results.txt");
     auto start = high_resolution_clock::now(); 
     auto closest_part1 = p1(points);
@@ -327,7 +356,7 @@ void part1(vector<Point> &points){
     ofs.close();
 }
 
-void part2(vector<Point> &points){
+void part2(vector<Point> points){
     ofstream ofs;
     ofs.open("results.txt", ios_base::app);
     auto start = high_resolution_clock::now(); 
@@ -346,7 +375,7 @@ void part2(vector<Point> &points){
     ofs.close();
 }
 
-void part3(vector<Point> &points){
+void part3(vector<Point> points){
     ofstream ofs;
     ofs.open("results.txt", ios_base::app);
     auto start = high_resolution_clock::now(); 
@@ -365,7 +394,7 @@ void part3(vector<Point> &points){
     ofs.close();
 }
 
-void part4(vector<Point> &points){
+void part4(vector<Point> points){
     ofstream ofs;
     ofs.open("results.txt", ios_base::app);
     auto start = high_resolution_clock::now(); 
@@ -413,4 +442,4 @@ int main(int argc, char** argv){
     part3(points);
     part4(points);
     return 0;
-}   
+}  
