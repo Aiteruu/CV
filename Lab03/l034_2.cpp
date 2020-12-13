@@ -63,7 +63,7 @@ class Pair{
     private:
         double x, y;
     public:
-    Pair(unsigned long x1, unsigned long y1){
+    Pair(unsigned long long x1, unsigned long long y1){
         x = x1;
         y = y1;
     }
@@ -75,26 +75,17 @@ class Pair{
         out << fixed << setprecision(17) << scientific << c.x << "   " << c.y << endl;
         return out;
     }
-    static double random_point(){
-        return (double)rand()/(double)RAND_MAX;
-    }
-    double get_x(){
+    unsigned long long get_x(){
         return x;
     }
-    double get_y(){
+    unsigned long long get_y(){
         return y;
     }
-    double const_x() const{
+    unsigned long long const_x() const{
         return x;
     }
-    double const_y() const{
+    unsigned long long const_y() const{
         return y;
-    }
-    void set_x(double x){
-        this->x = x;
-    }
-    void set_y(double y){
-        this->y = y;
     }
 };
 
@@ -304,7 +295,7 @@ vector<int> p3(vector<Point> &pts){
 void maintain_subsquares(unordered_map<Pair, Point, hash_function> &um, double delta, vector<Point> &pts){
     um.clear();
     for(auto &pt : pts)
-        um[Pair{(unsigned long)floor(pt.get_x() * 2 / delta), (unsigned long)floor(pt.get_y() * 2 / delta)}] = pt;
+        um[Pair{(unsigned long long)floor(pt.get_x() * 2 / delta), (unsigned long long)floor(pt.get_y() * 2 / delta)}] = pt;
 }
 
 vector<Point> p4(vector<Point> &pts){
@@ -322,13 +313,12 @@ vector<Point> p4(vector<Point> &pts){
         // i++;
         if(delta == 0) break;
         visited.push_back(pt);
-        auto subsquare = Pair{(unsigned long)floor(pt.get_x() * 2 / delta), (unsigned long)floor(pt.get_y() * 2 / delta)};
+        auto subsquare = Pair{(unsigned long long)floor(pt.get_x() * 2 / delta), (unsigned long long)floor(pt.get_y() * 2 / delta)};
         double delta_prime = delta;
-        for(int x = subsquare.get_x() - 2; x <= subsquare.get_x() + 2; x++){
-            for(int y = subsquare.get_y() - 2; y <= subsquare.get_y() + 2; y++){
-                auto sq = Pair{(unsigned long) (x), (unsigned long) (y)};
+        for(unsigned long long x = max((unsigned long long) 0, subsquare.get_x() - 2); x <= subsquare.get_x() + 2; x++){
+            for(unsigned long long y = max((unsigned long long) 0, subsquare.get_y() - 2); y <= subsquare.get_y() + 2; y++){
+                auto sq = Pair{x, y};
                 if(subsquares->find(sq) != subsquares->end()){
-                    
                     auto pt2 = (*subsquares)[sq];
                     auto dist = distance(pt, pt2);
                     if(dist < delta_prime){
@@ -349,7 +339,7 @@ vector<Point> p4(vector<Point> &pts){
     }
     return min_dist;
 }
-void part1(vector<Point> &points){
+void part1(vector<Point> points){
     ofstream ofs("results.txt");
     auto start = high_resolution_clock::now(); 
     auto closest_part1 = p1(points);
@@ -366,7 +356,7 @@ void part1(vector<Point> &points){
     ofs.close();
 }
 
-void part2(vector<Point> &points){
+void part2(vector<Point> points){
     ofstream ofs;
     ofs.open("results.txt", ios_base::app);
     auto start = high_resolution_clock::now(); 
@@ -385,7 +375,7 @@ void part2(vector<Point> &points){
     ofs.close();
 }
 
-void part3(vector<Point> &points){
+void part3(vector<Point> points){
     ofstream ofs;
     ofs.open("results.txt", ios_base::app);
     auto start = high_resolution_clock::now(); 
@@ -404,7 +394,7 @@ void part3(vector<Point> &points){
     ofs.close();
 }
 
-void part4(vector<Point> &points){
+void part4(vector<Point> points){
     ofstream ofs;
     ofs.open("results.txt", ios_base::app);
     auto start = high_resolution_clock::now(); 
@@ -441,15 +431,15 @@ vector<Point> read_file(string path){
     }
     return pts2;
 }
-auto points = get_vector(NPOINTS);
-//auto points = read_file("points100k.dat"); 
+//auto points = get_vector(NPOINTS);
+auto points = read_file("points100k.dat"); 
 
 int main(int argc, char** argv){
     ofstream ofs;
     ofs.open("results.txt");
     ofs.close();
-    //part2(points);
+    part2(points);
     part3(points);
     part4(points);
     return 0;
-}   
+}  
