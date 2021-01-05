@@ -257,7 +257,7 @@ vector<int> recur_pt3(vector<Point> &pts, int lower_bound, int upper_bound){
     auto dist_s = d;
     if(slice.size() > 1){
         sort(slice.begin(), slice.end(), 
-        [](auto &a, auto &b) -> bool
+        [](vector<Point> &a, vector<Point> &b) -> bool
         { 
             return a[0].get_x() < b[0].get_x(); 
         });
@@ -273,6 +273,7 @@ vector<int> recur_pt3(vector<Point> &pts, int lower_bound, int upper_bound){
     if(dist_s < d) return s;
     return min_split;
 }
+
 
 vector<int> p2(vector<Point> &pts){
     sort(pts.begin(), pts.end(), 
@@ -306,11 +307,9 @@ vector<Point> p4(vector<Point> &pts){
     vector<Point> visited {pts[0], pts[1]};
     unordered_map<Pair, Point,  hash_function> *subsquares = new unordered_map<Pair, Point,  hash_function>;
     maintain_subsquares(*subsquares, delta, visited);
-    int i = 0;
     for(auto &pt : vector<Point>(pts.begin() + 2, pts.end())){
         Point min_pt;
-        // cout << i << endl;
-        // i++;
+
         if(delta == 0) break;
         visited.push_back(pt);
         auto subsquare = Pair{(unsigned long long)floor(pt.get_x() * 2 / delta), (unsigned long long)floor(pt.get_y() * 2 / delta)};
@@ -431,14 +430,13 @@ vector<Point> read_file(string path){
     }
     return pts2;
 }
-auto points = get_vector(NPOINTS);
-//auto points = read_file("points100k.dat"); 
+//auto points = get_vector(NPOINTS);
+auto points = read_file("points100k.dat"); 
 
 int main(int argc, char** argv){
     ofstream ofs;
     ofs.open("results.txt");
     ofs.close();
-    part2(points);
     part3(points);
     part4(points);
     return 0;
