@@ -176,21 +176,20 @@ vector<Point> input(){
     cin >> s;
     transform(s.begin(), s.end(), s.begin(), ::tolower);
     if(s == "yes"){
-        return get_vector(10);
         cout << "Points saved to points.txt" << endl;
+        return get_vector(10);
     }
-    else{
-        vector<Point> pts {};
-        cout << "Reading from points.txt" << endl;
-        ifstream file("points.txt");
-        vector<double> pt (2);
-        while(file){
-            file >> pt[0] >> pt[1];
-            Point c(pt);
-            pts.push_back(c);
-        }
-        return pts;
+
+    vector<Point> pts {};
+    cout << "Reading from points.txt" << endl;
+    ifstream file("points.txt");
+    vector<double> pt (2);
+    while(file){
+        file >> pt[0] >> pt[1];
+        Point c(pt);
+        pts.push_back(c);
     }
+    return pts;
 }
 
 void draw(KDTree tree){
@@ -222,7 +221,7 @@ void part3(){
     for(auto pt : pts)
         kdtree.insert(pt);
     draw(kdtree);
-    cout << "finished" << endl;
+    cout << "finished creating kd-tree and diagram.ppm" << endl;
 }
 int main(int argc, char** argv){
     part3();
