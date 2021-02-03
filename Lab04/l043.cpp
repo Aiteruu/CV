@@ -172,12 +172,16 @@ vector<Point> get_vector(int n){
 
 vector<Point> input(){
     string s;
-    cout << "Generate random list?";
+    cout << "Generate random points.txt?";
     cin >> s;
     transform(s.begin(), s.end(), s.begin(), ::tolower);
-    if(s == "yes") return get_vector(10);
+    if(s == "yes"){
+        return get_vector(10);
+        cout << "Points saved to points.txt" << endl;
+    }
     else{
         vector<Point> pts {};
+        cout << "Reading from points.txt" << endl;
         ifstream file("points.txt");
         vector<double> pt (2);
         while(file){
