@@ -26,7 +26,7 @@ void show_img(vector<vector<double>> &img, string filename, int x_dim, int y_dim
 }
 vector<vector<double>> ConvSobel(vector<vector<double>> &img){
     vector<vector<double>> conv_result (img.size() - 2, vector<double> (img[0].size() - 2, 0));
-    vector<double> grad_x {1, 0, 1, -2, 0, 2, -1, 0, 1};
+    vector<double> grad_x {-1, 0, 1, -2, 0, 2, -1, 0, 1};
     vector<double> grad_y {1, 2, 1, 0, 0, 0, -1, -2, -1};
     for(int y = 0; y < conv_result[0].size(); y++){      
         for(int x = 0; x < conv_result.size(); x++){
@@ -76,8 +76,15 @@ void part1(){
             flattened.push_back(result[x][y]);
     vector<double> flat_cp (flattened);
     sort(flat_cp.begin(), flat_cp.end());
-    threshold(flattened, flat_cp[flat_cp.size() / 2] * 1.33);
-    show_img(result, "imagem.ppm", x_dim, y_dim);
+    auto min = flat_cp[0];
+    auto max = flat_cp[flat_cp.size() - 1];
+    double sum = 0;
+    for(auto &v : flattened){
+        v = ( v - min ) / ( max - min ) * 255; 
+        sum += v;
+    }
+    threshold(flattened, sum / flattened.size() * 2.66);
+    show_img(flattened, "imagem.ppm", x_dim, y_dim);
 }
 int main(int argc, char** argv){
     part1();
